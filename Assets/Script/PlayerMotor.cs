@@ -1,9 +1,14 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerMotor : MonoBehaviour
 {
     private CharacterController controller;
     private Vector3 playerVelocity;
+    private Vector3 moveDirection;
+    private Vector3 targetVelocity;
+    private Vector3 currentVelocity = Vector3.zero;
+
     private bool isGrounded;
     public float speed = 3f;
     public float gravity = -9.8f;
@@ -16,10 +21,8 @@ public class PlayerMotor : MonoBehaviour
     // Add momentum to the player
     public float airControl = 0.4f;
 
-    // Add animation reference to Animator
     public Animator animator;
 
-    private Vector3 currentVelocity = Vector3.zero;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -52,16 +55,34 @@ public class PlayerMotor : MonoBehaviour
         //playerVelocity.y += gravity * Time.deltaTime;
 
         // Calculate the target velocity
-        Vector3 targetVelocity =  transform.TransformDirection(new Vector3(input.x, 0, input.y)) * speed;
-
+        targetVelocity =  transform.TransformDirection(new Vector3(input.x, 0, input.y)) * speed;
+        moveDirection = new Vector3(input.x, 0, input.y);
 
         // Reduce movement in the air
         float controlFactor = isGrounded ? 1 : airControl;
 
-        // Smmooth accerlation and deceleration
-        currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, Time.deltaTime * acceleration);
+        // Animations
+        if (moveDirection == Vector3.zero)
+        {
+            // Idle
+            animator.SetFloat("Speed", 0f);
 
+        } else if (!Input.GetKey(KeyCode.LeftShift))
+        {
+            // Walk
+            animator.SetFloat("Speed", 0.5f);
+        }
+        else
+        {
+            // Run
+            animator.SetFloat("Speed", 1f);
+        }
+
+        // Smmooth accerlation and deceleration
+        currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, Time.deltaTime * acceleration * controlFactor);
         controller.Move(currentVelocity * Time.deltaTime);
+
+        // controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
 
         // Check if the player is on the ground
         if (isGrounded && playerVelocity.y < 0)
