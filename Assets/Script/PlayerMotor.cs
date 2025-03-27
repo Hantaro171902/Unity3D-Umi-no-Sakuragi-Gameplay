@@ -10,7 +10,7 @@ public class PlayerMotor : MonoBehaviour
     public float jumpHeight = 1.5f;
 
     // Update to make movement more smooth
-    public float acceleration = 5f;
+    public float acceleration = 10f;
     public float deceleration = 5f;
 
     // Add momentum to the player
@@ -79,7 +79,9 @@ public class PlayerMotor : MonoBehaviour
         // Play walking animation when moving
         bool isWalking = input.x != 0 || input.y != 0;
         animator.SetBool("isWalking", isWalking);   // Update Animator parameter
+        Debug.Log("isWalking: " + isWalking);
     }
+
 
     public void Jump()
     {
