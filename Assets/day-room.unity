@@ -1256,7 +1256,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 892011460977231038, guid: c8e60bf9eb02a254b878f236806648e3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.732
+      value: 3.028
       objectReference: {fileID: 0}
     - target: {fileID: 892011460977231038, guid: c8e60bf9eb02a254b878f236806648e3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1355,7 +1355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4eb65a9b1298b4aaebe268a84523b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  cam: {fileID: 1696377601}
   xSensitivity: 30
   ySensitivity: 30
 --- !u!114 &8372064312241292416
@@ -1388,13 +1388,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 3
+  m_Radius: 1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.3, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
