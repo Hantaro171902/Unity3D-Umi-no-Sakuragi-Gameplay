@@ -9,12 +9,14 @@ public class PlayerInteraction : MonoBehaviour
     public Transform holdPos;
 
     public float throwForce = 500f;  // force at which the object is thrown at
-    public float pickUpRange = 5f;  // how far the player can pick up objects 
+    public float pickUpRange = 100f;  // how far the player can pick up objects 
 
     private float rotationSpeed = 1f;   // how fast/slow the object rotates
     private GameObject heldObj; // the object that the player is pickup
     private Rigidbody heldObjRb;
     private bool canDrop = true;
+    private bool isRotating = false;
+
     private int LayerNumber;    // layer index
 
     void Start()
@@ -29,18 +31,17 @@ public class PlayerInteraction : MonoBehaviour
         {
             if (heldObj == null)
             {
-                RaycastHit hit;
-                if (Physics.Raycast(player.transform.position, player.transform.forward, out hit, pickUpRange))
+                RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, pickUpRange);
+
+                foreach (RaycastHit hit in hits)
                 {
-                    if (hit.transform.gameObject.tag == "canPickup")
+                    Debug.Log("Hit object: " + hit.transform.gameObject.name);
+
+                    if (hit.transform.gameObject.tag == "pickup")
                     {
-                        //heldObj = hit.transform.gameObject;
-                        //heldObj.GetComponent<Rigidbody>().useGravity = false;
-                        //heldObj.GetComponent<Rigidbody>().detectCollisions = true;
-                        //heldObj.transform.position = holdPos.position;
-                        //heldObj.transform.parent = holdPos;
-                        //canDrop = true;
                         PickUpObject(hit.transform.gameObject);
+                        Debug.Log("Can Pick Up: " + hit.transform.gameObject.name);
+                        break; // Stop after finding the first valid object
                     }
                 }
             }
@@ -48,7 +49,7 @@ public class PlayerInteraction : MonoBehaviour
             {
                 if (canDrop == true)
                 {
-                    StopCliping();  //prevent object from clipping through walls
+                    StopClipping();  //prevent object from clipping through walls
                     DropObject();
                 }
             }
@@ -56,7 +57,10 @@ public class PlayerInteraction : MonoBehaviour
         if (heldObj != null)
         {
             MoveObject();   // keep object position at holdPos
-            RotateObject();
+            if (isRotating && Input.GetMouseButton(0)) // Hold left-click to rotate
+            {
+                RotateObject();
+            }
             if (Input.GetKeyDown(KeyCode.Mouse0) && canDrop == true)    // Mouse0 is left click
             {
                 StopClipping();
@@ -79,6 +83,7 @@ public class PlayerInteraction : MonoBehaviour
             // make sure the object doesn't collide with the player
             Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), true);
         }
+        Debug.Log("Picking up: " + pickUpObj.name);
 
     }
 
@@ -102,15 +107,16 @@ public class PlayerInteraction : MonoBehaviour
 
     void RotateObject()
     {
-        if (Input.GetKey(KeyCode.R)) // hold R to rotate object
+        if (Input.GetKeyDown(KeyCode.R)) // hold R to rotate object
         {
+            isRotating = !isRotating;
             canDrop = false;
 
             float XaxisRotation = Input.GetAxis("Mouse X") * rotationSpeed;
             float YaxisRotation = Input.GetAxis("Mouse Y") * rotationSpeed;
             //rotate the object depending on mouse X-Y Axis
-            heldObj.transform.Rotate(Vector3.down, XaxisRotation);
-            heldObj.transform.Rotate(Vector3.right, YaxisRotation);
+            heldObj.transform.Rotate(Vector3.down, XaxisRotation, Space.World);
+            heldObj.transform.Rotate(Vector3.right, YaxisRotation, Space.World);
         }
         else
         {

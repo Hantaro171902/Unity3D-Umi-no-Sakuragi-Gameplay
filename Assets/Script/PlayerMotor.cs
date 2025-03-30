@@ -70,12 +70,12 @@ public class PlayerMotor : MonoBehaviour
         } else if (!Input.GetKey(KeyCode.LeftShift))
         {
             // Walk
-            animator.SetFloat("Speed", 0.5f);
+            animator.SetFloat("Speed", 0.3f);
         }
         else
         {
             // Run
-            animator.SetFloat("Speed", 1f);
+            animator.SetFloat("Speed", 0.5f);
         }
 
         // Smmooth accerlation and deceleration
@@ -97,10 +97,7 @@ public class PlayerMotor : MonoBehaviour
         controller.Move(playerVelocity * Time.deltaTime);
         Debug.Log(playerVelocity.y);
 
-        // Play walking animation when moving
-        bool isWalking = input.x != 0 || input.y != 0;
-        animator.SetBool("isWalking", isWalking);   // Update Animator parameter
-        Debug.Log("isWalking: " + isWalking);
+       
     }
 
 
