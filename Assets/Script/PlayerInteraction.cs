@@ -4,16 +4,17 @@ public class PlayerInteraction : MonoBehaviour
 {
     public GameObject player;
     public Transform holdPos;
-    public Vector3 defaultPosition; // Store the original position
+    public Camera playerCamera; // Reference to the player camera
 
     public float throwForce = 500f;
-    public float pickUpRange = 100f;
+    public float pickUpRange = 3f; // Adjusted for better accuracy
     public float rotationSpeed = 5f;
 
     private GameObject heldObj;
     private Rigidbody heldObjRb;
     private bool isRotating = false;
     private int holdLayer;
+    private Vector3 defaultPosition;
 
     void Start()
     {
@@ -26,16 +27,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             if (heldObj == null)
             {
-                RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, pickUpRange);
-
-                foreach (RaycastHit hit in hits)
-                {
-                    if (hit.transform.CompareTag("pickup"))
-                    {
-                        PickUpObject(hit.transform.gameObject);
-                        break;
-                    }
-                }
+                TryPickUpObject();
             }
             else
             {
@@ -49,7 +41,7 @@ public class PlayerInteraction : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                isRotating = !isRotating; // Toggle rotation mode
+                isRotating = !isRotating;
             }
 
             if (isRotating && Input.GetMouseButton(0))
@@ -69,21 +61,40 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+    void TryPickUpObject()
+    {
+        RaycastHit[] hits = Physics.RaycastAll(playerCamera.transform.position, playerCamera.transform.forward, pickUpRange);
+        System.Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance)); // Sort by closest first
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.transform.CompareTag("pickup"))
+            {
+                PickUpObject(hit.transform.gameObject);
+                break;
+            }
+        }
+    }
+
     void PickUpObject(GameObject pickUpObj)
     {
         if (pickUpObj.GetComponent<Rigidbody>())
         {
             heldObj = pickUpObj;
             heldObjRb = pickUpObj.GetComponent<Rigidbody>();
-            defaultPosition = heldObj.transform.position; // Save default position
+            defaultPosition = heldObj.transform.position;
 
             heldObjRb.isKinematic = true;
-            heldObjRb.transform.parent = holdPos.transform;
+            heldObj.transform.SetParent(holdPos, true); // Set parent with world position intact
+            heldObj.transform.localPosition = Vector3.zero; // Ensure it's centered in holdPos
+            heldObj.transform.localRotation = Quaternion.identity; // Reset rotation
+
             heldObj.layer = holdLayer;
 
             Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), true);
         }
     }
+
 
     void DropObject()
     {
