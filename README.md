@@ -12,6 +12,7 @@
 ## 📚 Table of Contents
 
 - [🎮 Overview](#-overview)
+- [🎨 Art & Asset Creation](#-art)
 - [🕹️ Features](#-features)
 - [📸 Media](#-media)
 - [🧩 Technical](#-technical)
@@ -25,6 +26,21 @@
 
 **Umi No Sakuragi** (海の桜木) is a **first-person simulation** set during WWII on the legendary Japanese battleship **Yamato**.  
 You explore as a shipboard tailor collecting memories through objects scattered across the environment. The project is a **prototype focused on movement, interaction, and atmosphere.**
+
+---
+
+## 🎨 Art & Asset Creation
+
+### Character 
+What I do ?
+- Riging texturing and animation
+
+<img width="2980" height="1098" alt="image" src="https://github.com/user-attachments/assets/4dc3b4f1-09c3-4a8b-8b63-36ca0a5c6182" />
+
+- Rig
+
+<img width="535" height="681" alt="image" src="https://github.com/user-attachments/assets/cac0d88b-c13c-43e4-9168-4b8f8097602b" />
+
 
 ---
 
